@@ -1,26 +1,50 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+@import 'tailwindcss';
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-linear-to-br from-gray-900 via-gray-800 to-black
+    text-white min-h-screen flex items-center justify-center p-6
+}
+
+.chat-wrapper {
+  @apply flex flex-col w-full max-w-md h-[600px] rounded-xl shadow-2xl
+  bg-gray-900 border-2 border-gray-700 p-5
+}
+
+.chat-header {
+  @apply text-center text-2xl font-bold mb-4 text-gray-100 border-b border-gray-700 pb-3
+}
+
+.chat-messages {
+  @apply flex-1 overflow-y-auto mb-4 space-y-3 py-2
+}
+
+.chat-message {
+  @apply p-3 text-white max-w-[80%] rounded-2xl shadow-md
+}
+
+.chat-input-container {
+  @apply flex gap-3
+}
+
+.chat-input {
+  @apply flex-1 p-3 border border-gray-600 rounded-2xl bg-gray-800
+    text-white focus:outline-none focus:ring-2 focus:ring-blue-500
+}
+
+.chat-button {
+  @apply px-5 py-2 bg-blue-500 text-white rounded-2xl hover:bg-blue-600
+    active:scale-95 transition-all duration-150
+}
+
+::-webkit-scrollbar {
+  width: 6px
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent
 }
