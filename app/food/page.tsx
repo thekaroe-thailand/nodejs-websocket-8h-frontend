@@ -123,7 +123,7 @@ export default function Food() {
                     <div className="text-sm">
                         WS:
                         <span className={`px-2 py-1 rounded 
-                            ${wsConnected} ? 'bg-green-600' : 'bg-red-600'} `}>
+                            ${wsConnected ? 'bg-green-600' : 'bg-red-600'} `}>
                             {wsConnected ? 'connected' : 'disconncted'}
                         </span>
                     </div>
@@ -133,9 +133,106 @@ export default function Food() {
                     <div className="col-span-7">
                         <div className="bg-gray-900 border border-gray-700 rounded-2xl p-4 shadow-lg">
                             <h2 className="text-lg font-semibold mb-3">เมนูอาหาร</h2>
+
+                            <div className='grid grid-cols-2 gap-3'>
+                                {foods.map((f) => (
+                                    <div key={f.id} className="bg-linear-to-br from-gray-800 to-gray-700 
+                                    p-3 rounded-lg flex items-center justify-center">
+                                        <div>
+                                            <div className="font-semibold">{f.name}</div>
+                                            <div className="text-sm text-gray-300">{f.price}</div>
+                                        </div>
+                                        <div className="flex flex-col items-end gap-2">
+                                            <button
+                                                onClick={() => openOrderModal(f)}
+                                                className="px-3 py-1 bg-blue-600 rounded-md hover:bg-blue-700">
+                                                สั่ง
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* รายการสั่งซื้อ */}
+                    <div className="col-span-5">
+                        <div className="bg-gray-900 border border-gray-700 rounded-2xl p-4 shadow-lg
+                                    h-[560px] flex flex-col">
+                            <h2 className="text-lg font-semibold mb-3">Order List</h2>
+                            <div className="flex-1 overflow-y space-y-3 pr-2">
+                                {orders.length === 0 ? (
+                                    <div className="text-gray-400">ยังไม่มีคำสั่งซื้อ</div>
+                                ) : (
+                                    orders.map((o) => (
+                                        <div key={o.id} className="bg-gray-800 border border-gray-700
+                                        rounded-lg p-3 flex justify-between items-center">
+                                            <div>
+                                                <div className="font-semibold">
+                                                    {o.name}
+                                                    <span className="text-sm text-gray-400">{o.qty}</span>
+                                                </div>
+                                                <div className="text-sm text-gray-300">โต้ะ {o.tableNo}</div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="font-semibold">{o.price * o.qty} ฿</div>
+                                                <button
+                                                    onClick={() => removeOrder(o.id)}
+                                                    className="text-red-400 text-xs hover:text-red-300">
+                                                    ลบ
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                                <div ref={ordersEndRef} />
+                            </div>
+
+                            <div className="mt-4 flex items-center gap-2">
+                                <input
+                                    className="w-[100px] p-2 rounded-md bg-gray-800 border border-gray-700"
+                                    value={tableNo}
+                                    onChange={(e) => setTableNo(e.target.value)}
+                                />
+                                <div className="text-sm text-gray-400 flex-1/2">หมายเลขโต้ะ</div>
+                            </div>
+
+                            <button onClick={confirmAllOrder}
+                                className="mt-4 w-full py-2 bg-green-600 rounded-xl hover:bg-green-700 transition">
+                                ยืนยันการสั่งทั้งหมด
+                            </button>
                         </div>
                     </div>
                 </div>
+
+                {/* Modal ยืนยันแต่ละเมนู */}
+                {selectedFood && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+                        <div className="bg-gray-900 border border-gray-700 rounded-2xl p-6 w-full max-w-md">
+                            <h3 className="text-xl font-semibold mb-3">สั่ง: {selectedFood.name}</h3>
+                            <div className="mb-4">
+                                <label className="text-sm text-gray-300">จำนวน</label>
+                                <div className="flex items-center gap-2 mt-2">
+                                    <button onClick={() => setQty((q) => Math.max(1, q - 1))}
+                                        className="px-3 py-1 bg-gray-800 rounded">-</button>
+                                    <div className="px-4">{qty}</div>
+                                    <button onClick={() => setQty((q) => q + 1)}
+                                        className="px-3 py-1 bg-gray-800 rounded">+</button>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end gap-2">
+                                <button
+                                    onClick={() => addTempOrder(selectedFood, qty)}
+                                    className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700">
+                                    เพิ่มเข้ารายการ
+                                </button>
+                                <button onClick={() => setSelectedFood(null)}
+                                    className="px-4 py-2 bg-gray-700 rounded">ยกเลิก</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
